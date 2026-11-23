@@ -1,21 +1,41 @@
 // use prisma-8
 
-model User {
-  id        Int                @id @default(autoincrement())
-  email     String             @unique
-  username  String?
-  name      String?
-  posts     Post[]
-  createdAt DateTime           @default(now()) @onCreate(now())
-  updatedAt temporal.UpdatedAt
+model usuarios {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  password_hash String
+  nombre        String
+  apellido_1    String
+  apellido_2    String?
+  role          String    @default("user")
+  creacion_dt   DateTime  @default(now())
+
+  // Relación 1:N -> Un usuario gestiona varias fichas
+  fichas        fichas[]
 }
 
-model Post {
-  id        Int                @id @default(autoincrement())
-  title     String
-  content   String?
-  author    User               @relation(fields: [authorId], references: [id])
-  authorId  Int
-  createdAt DateTime           @default(now()) @onCreate(now())
-  updatedAt temporal.UpdatedAt
+model fichas {
+  id              Int          @id @default(autoincrement())
+  usuario_id      Int
+  titulo          String
+  url             String
+  descripcion     String?
+  estado          String       @default("sin_cambios")
+  last_checked_at DateTime?
+  creacion_dt     DateTime     @default(now())
+
+  // Relación con usuarios (borrado en cascada)
+  usuario         usuarios     @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+  // Relación 1:N -> Una ficha registra varias revisiones
+  revisiones      revisiones[]
+}
+
+model revisiones {
+  id          Int      @id @default(autoincrement())
+  ficha_id    Int
+  links_json  Json
+  creacion_dt DateTime @default(now())
+
+  // Relación con fichas (borrado en cascada)
+  ficha       fichas   @relation(fields: [ficha_id], references: [id], onDelete: Cascade)
 }

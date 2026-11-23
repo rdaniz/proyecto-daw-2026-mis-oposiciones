@@ -4,12 +4,16 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
-    "Post": {
-      "model": "Post",
+    "fichas": {
+      "model": "fichas",
       "namespace": "public"
     },
-    "User": {
-      "model": "User",
+    "revisiones": {
+      "model": "revisiones",
+      "namespace": "public"
+    },
+    "usuarios": {
+      "model": "usuarios",
       "namespace": "public"
     }
   },
@@ -17,23 +21,9 @@
     "namespaces": {
       "public": {
         "models": {
-          "Post": {
+          "fichas": {
             "fields": {
-              "authorId": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/int4@1",
-                  "kind": "scalar"
-                }
-              },
-              "content": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
-              "createdAt": {
+              "creacion_dt": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-date@1",
@@ -41,6 +31,20 @@
                   "typeParams": {
                     "precision": 3
                   }
+                }
+              },
+              "descripcion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
                 }
               },
               "id": {
@@ -50,14 +54,105 @@
                   "kind": "scalar"
                 }
               },
-              "title": {
+              "last_checked_at": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "titulo": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
-              "updatedAt": {
+              "url": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "usuario_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "revisiones": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "ficha_id"
+                  ]
+                },
+                "to": {
+                  "model": "revisiones",
+                  "namespace": "public"
+                }
+              },
+              "usuario": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "usuario_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "usuarios",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "creacion_dt": {
+                  "column": "creacion_dt"
+                },
+                "descripcion": {
+                  "column": "descripcion"
+                },
+                "estado": {
+                  "column": "estado"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "last_checked_at": {
+                  "column": "last_checked_at"
+                },
+                "titulo": {
+                  "column": "titulo"
+                },
+                "url": {
+                  "column": "url"
+                },
+                "usuario_id": {
+                  "column": "usuario_id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "fichas"
+            }
+          },
+          "revisiones": {
+            "fields": {
+              "creacion_dt": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-date@1",
@@ -66,54 +161,83 @@
                     "precision": 3
                   }
                 }
+              },
+              "ficha_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "links_json": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/json@1",
+                  "kind": "scalar"
+                }
               }
             },
             "relations": {
-              "author": {
+              "ficha": {
                 "cardinality": "N:1",
                 "nullable": false,
                 "on": {
                   "localFields": [
-                    "authorId"
+                    "ficha_id"
                   ],
                   "targetFields": [
                     "id"
                   ]
                 },
                 "to": {
-                  "model": "User",
+                  "model": "fichas",
                   "namespace": "public"
                 }
               }
             },
             "storage": {
               "fields": {
-                "authorId": {
-                  "column": "authorId"
+                "creacion_dt": {
+                  "column": "creacion_dt"
                 },
-                "content": {
-                  "column": "content"
-                },
-                "createdAt": {
-                  "column": "createdAt"
+                "ficha_id": {
+                  "column": "ficha_id"
                 },
                 "id": {
                   "column": "id"
                 },
-                "title": {
-                  "column": "title"
-                },
-                "updatedAt": {
-                  "column": "updatedAt"
+                "links_json": {
+                  "column": "links_json"
                 }
               },
               "namespaceId": "public",
-              "table": "Post"
+              "table": "revisiones"
             }
           },
-          "User": {
+          "usuarios": {
             "fields": {
-              "createdAt": {
+              "apellido_1": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "apellido_2": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "creacion_dt": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-date@1",
@@ -137,25 +261,22 @@
                   "kind": "scalar"
                 }
               },
-              "name": {
-                "nullable": true,
+              "nombre": {
+                "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
-              "updatedAt": {
+              "password_hash": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
                 }
               },
-              "username": {
-                "nullable": true,
+              "role": {
+                "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -163,26 +284,32 @@
               }
             },
             "relations": {
-              "posts": {
+              "fichas": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
                     "id"
                   ],
                   "targetFields": [
-                    "authorId"
+                    "usuario_id"
                   ]
                 },
                 "to": {
-                  "model": "Post",
+                  "model": "fichas",
                   "namespace": "public"
                 }
               }
             },
             "storage": {
               "fields": {
-                "createdAt": {
-                  "column": "createdAt"
+                "apellido_1": {
+                  "column": "apellido_1"
+                },
+                "apellido_2": {
+                  "column": "apellido_2"
+                },
+                "creacion_dt": {
+                  "column": "creacion_dt"
                 },
                 "email": {
                   "column": "email"
@@ -190,18 +317,18 @@
                 "id": {
                   "column": "id"
                 },
-                "name": {
-                  "column": "name"
+                "nombre": {
+                  "column": "nombre"
                 },
-                "updatedAt": {
-                  "column": "updatedAt"
+                "password_hash": {
+                  "column": "password_hash"
                 },
-                "username": {
-                  "column": "username"
+                "role": {
+                  "column": "role"
                 }
               },
               "namespaceId": "public",
-              "table": "User"
+              "table": "usuarios"
             }
           }
         }
@@ -213,19 +340,9 @@
       "public": {
         "entries": {
           "table": {
-            "Post": {
+            "fichas": {
               "columns": {
-                "authorId": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": false
-                },
-                "content": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": true
-                },
-                "createdAt": {
+                "creacion_dt": {
                   "codecId": "pg/timestamptz-date@1",
                   "dataType": "pg/timestamptz",
                   "default": {
@@ -237,6 +354,20 @@
                     "precision": 3
                   }
                 },
+                "descripcion": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "estado": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "default": {
+                    "kind": "literal",
+                    "value": "sin_cambios"
+                  },
+                  "nullable": false
+                },
                 "id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
@@ -246,48 +377,59 @@
                   },
                   "nullable": false
                 },
-                "title": {
+                "last_checked_at": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "titulo": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": false
                 },
-                "updatedAt": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
+                "url": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "usuario_id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
                 }
               },
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "Post_authorId_idx_e47547ed"
+                    "name": "fichas_usuario_id_idx_65b6616a"
                   },
+                  "onDelete": "cascade",
                   "source": {
                     "columns": [
-                      "authorId"
+                      "usuario_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Post"
+                    "tableName": "fichas"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "usuarios"
                   }
                 }
               ],
               "indexes": [
                 {
                   "columns": [
-                    "authorId"
+                    "usuario_id"
                   ],
-                  "name": "Post_authorId_idx_e47547ed",
-                  "prefix": "Post_authorId_idx",
+                  "name": "fichas_usuario_id_idx_65b6616a",
+                  "prefix": "fichas_usuario_id_idx",
                   "unique": false
                 }
               ],
@@ -298,9 +440,92 @@
               },
               "uniques": []
             },
-            "User": {
+            "revisiones": {
               "columns": {
-                "createdAt": {
+                "creacion_dt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "ficha_id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nullable": false
+                },
+                "links_json": {
+                  "codecId": "pg/json@1",
+                  "dataType": "pg/json",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "revisiones_ficha_id_idx_23fcab40"
+                  },
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "ficha_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "revisiones"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "fichas"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "ficha_id"
+                  ],
+                  "name": "revisiones_ficha_id_idx_23fcab40",
+                  "prefix": "revisiones_ficha_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "usuarios": {
+              "columns": {
+                "apellido_1": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "apellido_2": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "creacion_dt": {
                   "codecId": "pg/timestamptz-date@1",
                   "dataType": "pg/timestamptz",
                   "default": {
@@ -326,23 +551,24 @@
                   },
                   "nullable": false
                 },
-                "name": {
+                "nombre": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
-                  "nullable": true
+                  "nullable": false
                 },
-                "updatedAt": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "username": {
+                "password_hash": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
-                  "nullable": true
+                  "nullable": false
+                },
+                "role": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "default": {
+                    "kind": "literal",
+                    "value": "user"
+                  },
+                  "nullable": false
                 }
               },
               "foreignKeys": [],
@@ -366,84 +592,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "920a87b50729a867e21706dd0fa5c3739e273a84ed89eb2f3525633b2d6ef85c"
-  },
-  "execution": {
-    "executionHash": "0ff7f5c55037616d53a67c7c581c1178658b41c7a674a85dd59fc3b8f9dd8a49",
-    "mutations": {
-      "defaults": [
-        {
-          "onCreate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "Post",
-            "field": "createdAt",
-            "namespace": "public"
-          }
-        },
-        {
-          "onCreate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "Post",
-            "field": "updatedAt",
-            "namespace": "public"
-          }
-        },
-        {
-          "onCreate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "User",
-            "field": "createdAt",
-            "namespace": "public"
-          }
-        },
-        {
-          "onCreate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "User",
-            "field": "updatedAt",
-            "namespace": "public"
-          }
-        }
-      ]
-    }
+    "storageHash": "50d2c4dfc195a552ec88cc2c5414d65f562e22b5c3d7f97961eebd8c8e05ca31"
   },
   "capabilities": {
     "postgres": {

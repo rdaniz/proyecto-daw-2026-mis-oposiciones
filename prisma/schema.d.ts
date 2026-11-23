@@ -18,9 +18,8 @@ import type {
 } from '@prisma/orm-postgres/contract-types';
 
 export type StorageHash =
-  StorageHashBase<'920a87b50729a867e21706dd0fa5c3739e273a84ed89eb2f3525633b2d6ef85c'>;
-export type ExecutionHash =
-  ExecutionHashBase<'0ff7f5c55037616d53a67c7c581c1178658b41c7a674a85dd59fc3b8f9dd8a49'>;
+  StorageHashBase<'50d2c4dfc195a552ec88cc2c5414d65f562e22b5c3d7f97961eebd8c8e05ca31'>;
+export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -304,32 +303,46 @@ export type StorageColumnInputTypes = ColumnTypesFromStorage<
 >;
 
 export namespace Models {
-  export type public_Post = {
-    authorId: FieldOutputTypes['public']['Post']['authorId'];
-    content: FieldOutputTypes['public']['Post']['content'];
-    createdAt: FieldOutputTypes['public']['Post']['createdAt'];
-    id: FieldOutputTypes['public']['Post']['id'];
-    title: FieldOutputTypes['public']['Post']['title'];
-    updatedAt: FieldOutputTypes['public']['Post']['updatedAt'];
-    author: public_User;
-    readonly [RelationKeys]?: 'author';
+  export type public_fichas = {
+    creacion_dt: FieldOutputTypes['public']['fichas']['creacion_dt'];
+    descripcion: FieldOutputTypes['public']['fichas']['descripcion'];
+    estado: FieldOutputTypes['public']['fichas']['estado'];
+    id: FieldOutputTypes['public']['fichas']['id'];
+    last_checked_at: FieldOutputTypes['public']['fichas']['last_checked_at'];
+    titulo: FieldOutputTypes['public']['fichas']['titulo'];
+    url: FieldOutputTypes['public']['fichas']['url'];
+    usuario_id: FieldOutputTypes['public']['fichas']['usuario_id'];
+    revisiones: public_revisiones[];
+    usuario: public_usuarios;
+    readonly [RelationKeys]?: 'revisiones' | 'usuario';
   };
-  export type public_User = {
-    createdAt: FieldOutputTypes['public']['User']['createdAt'];
-    email: FieldOutputTypes['public']['User']['email'];
-    id: FieldOutputTypes['public']['User']['id'];
-    name: FieldOutputTypes['public']['User']['name'];
-    updatedAt: FieldOutputTypes['public']['User']['updatedAt'];
-    username: FieldOutputTypes['public']['User']['username'];
-    posts: public_Post[];
-    readonly [RelationKeys]?: 'posts';
+  export type public_revisiones = {
+    creacion_dt: FieldOutputTypes['public']['revisiones']['creacion_dt'];
+    ficha_id: FieldOutputTypes['public']['revisiones']['ficha_id'];
+    id: FieldOutputTypes['public']['revisiones']['id'];
+    links_json: FieldOutputTypes['public']['revisiones']['links_json'];
+    ficha: public_fichas;
+    readonly [RelationKeys]?: 'ficha';
+  };
+  export type public_usuarios = {
+    apellido_1: FieldOutputTypes['public']['usuarios']['apellido_1'];
+    apellido_2: FieldOutputTypes['public']['usuarios']['apellido_2'];
+    creacion_dt: FieldOutputTypes['public']['usuarios']['creacion_dt'];
+    email: FieldOutputTypes['public']['usuarios']['email'];
+    id: FieldOutputTypes['public']['usuarios']['id'];
+    nombre: FieldOutputTypes['public']['usuarios']['nombre'];
+    password_hash: FieldOutputTypes['public']['usuarios']['password_hash'];
+    role: FieldOutputTypes['public']['usuarios']['role'];
+    fichas: public_fichas[];
+    readonly [RelationKeys]?: 'fichas';
   };
 }
 
 export declare const models: {
   public: {
-    Post: Models.public_Post;
-    User: Models.public_User;
+    fichas: Models.public_fichas;
+    revisiones: Models.public_revisiones;
+    usuarios: Models.public_usuarios;
   };
 };
 
@@ -351,26 +364,30 @@ type ContractBase = Omit<
         readonly kind: 'postgres-schema';
         readonly entries: {
           readonly table: {
-            readonly Post: {
+            readonly fichas: {
               columns: {
-                readonly authorId: {
-                  readonly dataType: 'pg/int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                  readonly many: false;
-                };
-                readonly content: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                  readonly many: false;
-                };
-                readonly createdAt: {
+                readonly creacion_dt: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-date@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                   readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly descripcion: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly estado: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'sin_cambios'>;
+                  };
                   readonly many: false;
                 };
                 readonly id: {
@@ -383,17 +400,29 @@ type ContractBase = Omit<
                   };
                   readonly many: false;
                 };
-                readonly title: {
+                readonly last_checked_at: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly titulo: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly updatedAt: {
-                  readonly dataType: 'pg/timestamptz';
-                  readonly codecId: 'pg/timestamptz-date@1';
+                readonly url: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
                   readonly nullable: false;
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly usuario_id: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
                   readonly many: false;
                 };
               };
@@ -401,9 +430,9 @@ type ContractBase = Omit<
               uniques: readonly [];
               indexes: readonly [
                 {
-                  readonly name: 'Post_authorId_idx_e47547ed';
-                  readonly prefix: 'Post_authorId_idx';
-                  readonly columns: readonly ['authorId'];
+                  readonly name: 'fichas_usuario_id_idx_65b6616a';
+                  readonly prefix: 'fichas_usuario_id_idx';
+                  readonly columns: readonly ['usuario_id'];
                   readonly unique: false;
                 },
               ];
@@ -411,20 +440,90 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Post';
-                    readonly columns: readonly ['authorId'];
+                    readonly tableName: 'fichas';
+                    readonly columns: readonly ['usuario_id'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'User';
+                    readonly tableName: 'usuarios';
                     readonly columns: readonly ['id'];
                   };
                 },
               ];
             };
-            readonly User: {
+            readonly revisiones: {
               columns: {
-                readonly createdAt: {
+                readonly creacion_dt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly ficha_id: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                  readonly many: false;
+                };
+                readonly links_json: {
+                  readonly dataType: 'pg/json';
+                  readonly codecId: 'pg/json@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'revisiones_ficha_id_idx_23fcab40';
+                  readonly prefix: 'revisiones_ficha_id_idx';
+                  readonly columns: readonly ['ficha_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'revisiones';
+                    readonly columns: readonly ['ficha_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'fichas';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly usuarios: {
+              columns: {
+                readonly apellido_1: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly apellido_2: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly creacion_dt: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-date@1';
                   readonly nullable: false;
@@ -448,23 +547,26 @@ type ContractBase = Omit<
                   };
                   readonly many: false;
                 };
-                readonly name: {
+                readonly nombre: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                  readonly many: false;
-                };
-                readonly updatedAt: {
-                  readonly dataType: 'pg/timestamptz';
-                  readonly codecId: 'pg/timestamptz-date@1';
                   readonly nullable: false;
-                  readonly typeParams: { readonly precision: 3 };
                   readonly many: false;
                 };
-                readonly username: {
+                readonly password_hash: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly role: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'user'>;
+                  };
                   readonly many: false;
                 };
               };
@@ -484,40 +586,103 @@ type ContractBase = Omit<
   readonly target: 'postgres';
   readonly targetFamily: 'sql';
   readonly roots: {
-    readonly Post: { readonly namespace: 'public' & NamespaceId; readonly model: 'Post' };
-    readonly User: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+    readonly fichas: { readonly namespace: 'public' & NamespaceId; readonly model: 'fichas' };
+    readonly revisiones: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'revisiones';
+    };
+    readonly usuarios: { readonly namespace: 'public' & NamespaceId; readonly model: 'usuarios' };
   };
   readonly domain: {
     readonly namespaces: {
       readonly public: {
         readonly models: {
-          readonly Post: {
+          readonly fichas: {
             readonly fields: {
-              readonly authorId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-              readonly content: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly createdAt: {
+              readonly creacion_dt: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
                   readonly codecId: 'pg/timestamptz-date@1';
                   readonly typeParams: { readonly precision: 3 };
                 };
+              };
+              readonly descripcion: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly estado: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly id: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
-              readonly title: {
+              readonly last_checked_at: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly titulo: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly updatedAt: {
+              readonly url: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly usuario_id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly revisiones: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'revisiones';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['ficha_id'];
+                };
+              };
+              readonly usuario: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'usuarios';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['usuario_id'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'fichas';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly creacion_dt: { readonly column: 'creacion_dt' };
+                readonly descripcion: { readonly column: 'descripcion' };
+                readonly estado: { readonly column: 'estado' };
+                readonly id: { readonly column: 'id' };
+                readonly last_checked_at: { readonly column: 'last_checked_at' };
+                readonly titulo: { readonly column: 'titulo' };
+                readonly url: { readonly column: 'url' };
+                readonly usuario_id: { readonly column: 'usuario_id' };
+              };
+            };
+          };
+          readonly revisiones: {
+            readonly fields: {
+              readonly creacion_dt: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
@@ -525,34 +690,55 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly precision: 3 };
                 };
               };
+              readonly ficha_id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly links_json: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/json@1' };
+              };
             };
             readonly relations: {
-              readonly author: {
-                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+              readonly ficha: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'fichas';
+                };
                 readonly cardinality: 'N:1';
                 readonly nullable: false;
                 readonly on: {
-                  readonly localFields: readonly ['authorId'];
+                  readonly localFields: readonly ['ficha_id'];
                   readonly targetFields: readonly ['id'];
                 };
               };
             };
             readonly storage: {
-              readonly table: 'Post';
+              readonly table: 'revisiones';
               readonly namespaceId: 'public';
               readonly fields: {
-                readonly authorId: { readonly column: 'authorId' };
-                readonly content: { readonly column: 'content' };
-                readonly createdAt: { readonly column: 'createdAt' };
+                readonly creacion_dt: { readonly column: 'creacion_dt' };
+                readonly ficha_id: { readonly column: 'ficha_id' };
                 readonly id: { readonly column: 'id' };
-                readonly title: { readonly column: 'title' };
-                readonly updatedAt: { readonly column: 'updatedAt' };
+                readonly links_json: { readonly column: 'links_json' };
               };
             };
           };
-          readonly User: {
+          readonly usuarios: {
             readonly fields: {
-              readonly createdAt: {
+              readonly apellido_1: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly apellido_2: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly creacion_dt: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
@@ -568,43 +754,44 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
-              readonly name: {
-                readonly nullable: true;
+              readonly nombre: {
+                readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly updatedAt: {
+              readonly password_hash: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly username: {
-                readonly nullable: true;
+              readonly role: {
+                readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
             };
             readonly relations: {
-              readonly posts: {
-                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Post' };
+              readonly fichas: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'fichas';
+                };
                 readonly cardinality: '1:N';
                 readonly on: {
                   readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['authorId'];
+                  readonly targetFields: readonly ['usuario_id'];
                 };
               };
             };
             readonly storage: {
-              readonly table: 'User';
+              readonly table: 'usuarios';
               readonly namespaceId: 'public';
               readonly fields: {
-                readonly createdAt: { readonly column: 'createdAt' };
+                readonly apellido_1: { readonly column: 'apellido_1' };
+                readonly apellido_2: { readonly column: 'apellido_2' };
+                readonly creacion_dt: { readonly column: 'creacion_dt' };
                 readonly email: { readonly column: 'email' };
                 readonly id: { readonly column: 'id' };
-                readonly name: { readonly column: 'name' };
-                readonly updatedAt: { readonly column: 'updatedAt' };
-                readonly username: { readonly column: 'username' };
+                readonly nombre: { readonly column: 'nombre' };
+                readonly password_hash: { readonly column: 'password_hash' };
+                readonly role: { readonly column: 'role' };
               };
             };
           };
@@ -644,71 +831,6 @@ type ContractBase = Omit<
     };
   };
   readonly extensions: {};
-  readonly execution: {
-    readonly executionHash: ExecutionHash;
-    readonly mutations: {
-      readonly defaults: readonly [
-        {
-          readonly onCreate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'Post';
-            readonly field: 'createdAt';
-            readonly namespace: 'public';
-          };
-        },
-        {
-          readonly onCreate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'Post';
-            readonly field: 'updatedAt';
-            readonly namespace: 'public';
-          };
-        },
-        {
-          readonly onCreate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'User';
-            readonly field: 'createdAt';
-            readonly namespace: 'public';
-          };
-        },
-        {
-          readonly onCreate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'User';
-            readonly field: 'updatedAt';
-            readonly namespace: 'public';
-          };
-        },
-      ];
-    };
-  };
   readonly meta: {};
   readonly profileHash: ProfileHash;
 };
