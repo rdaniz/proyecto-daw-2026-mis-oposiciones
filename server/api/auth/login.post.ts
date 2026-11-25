@@ -1,12 +1,21 @@
 import { db } from '../../../prisma/db'
 import { signToken, verifyPassword } from '../../utils/auth'
 
+/*defineEventHandler es la función principal para crear un manejador de peticiones HTTP (event handler) en el backend en Nuxt.
+Cuando se crea un archivo dentro de server/api/ o server/routes/ en Nuxt se exporta por defecto el resultado de defineEventHandler(async (event) => { ... }). */
+
 export default defineEventHandler(async (event) => {
   // Lee el email y la contraseña enviados en la petición POST
   const body = await readBody(event)
   const { email, password } = body || {}
 
   // Comprueba que no vengan vacíos
+
+  /* throw createError(...) lanza una excepción y corta inmediatamente la ejecución normal de la función en ese punto.
+     Cuando JavaScript/TypeScript ejecuta throw, se interrumpe el flujo de defineEventHandler
+     (no se ejecutan las validaciones posteriores, ni signToken, ni el return) y la excepción sube
+     hasta que Nitro la captura y devuelve la respuesta HTTP correspondiente. */
+
   if (!email || !password) {
     throw createError({
       statusCode: 400,

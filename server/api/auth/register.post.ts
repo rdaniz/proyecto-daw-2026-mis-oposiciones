@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
     .where({ email: emailNormalizado })
     .first()
 
-  // Si ya existe, rechaza con HTTP 400 (prueba PR-01)
+  // Si ya existe, rechaza con HTTP 400
   if (existente) {
     throw createError({
       statusCode: 400,
